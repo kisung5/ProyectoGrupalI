@@ -1,20 +1,30 @@
 module register_tb;
 
-logic clk, rst, h_sync, v_sync, blank_n, sync_n;
-logic [9:0] posx, posy;
+logic clk, wen, rst;
+logic [7:0] in, out;
 
-vga_signal DUT(clk, rst, h_sync, v_sync, blank_n, sync_n, posx, posy);
+register DUT(.wen(wen), .clk(clk), .rst(rst), .in(in), .out(out));
+
+always #10 clk <= ~clk;
 
 initial begin
 	clk = 0;
-	#10 rst = 0;
-	#10 rst = 1;
-	#10 rst = 0;
+	rst = 0;
+	in = 8'b00000000;
+	out = 8'b00000000;
+	#5 rst = 1;
+	#5 rst = 0;
+	#5 wen = 1;
+	#100;
+	#5 in = 8'b01011100;
+	#100;
+	#5 wen = 0;
+	#5 in = 8'b00001010;
+	#100;
+	#5 wen = 1;
+	#20;
+	#5 rst = 1;
+	#100;
 end
 
-always
-begin
-	#10 clk = ~clk;
-end
-
-endmodule // vga_signal_test
+endmodule

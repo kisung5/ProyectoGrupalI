@@ -1,3 +1,4 @@
+// Basic register with configurable bitsize. 
 module register #(parameter N = 8)
 (input wen, rst, clk,
 input [N-1:0] in,

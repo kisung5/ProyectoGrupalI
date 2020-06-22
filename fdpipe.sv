@@ -9,7 +9,7 @@ input [N-1:0] inst_F,
 output [N-1:0] inst_D);
 
 // Instruction fetched
-register #(.N(N)) reg1 (.wen(stall_D), .rst(flush_F), .clk(clk), 
+register #(.N(N)) reg1 (.wen(~stall_D), .rst(flush_F), .clk(clk), 
 	.in(inst_F), .out(inst_D));
 	
 endmodule 
