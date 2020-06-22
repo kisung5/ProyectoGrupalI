@@ -71,4 +71,5 @@ _output_files/
 output_files/
 greybox_tmp/
 .qsys_edit/
+simulation/
 PLLJ_PLLSPE_INFO.txt
