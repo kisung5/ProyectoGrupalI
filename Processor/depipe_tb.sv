@@ -33,8 +33,8 @@ initial begin
 	regA_in = 32'b0; 
 	regB_in = 32'b0;
 	inm_in = 19'b0;
-	#50;
-	#5 pcload_in = 1;
+	#55;
+	#20 pcload_in = 1;
 	regw_in = 1; 
 	memw_in = 0;
 	regmem_in = 0; 
@@ -46,8 +46,7 @@ initial begin
 	regA_in = 32'h0000FFFF; 
 	regB_in = 32'h00000801;
 	inm_in = 19'h00000;
-	#5;
-	#5 pcload_in = 0;
+	#20 pcload_in = 0;
 	regw_in = 1; 
 	memw_in = 0;
 	regmem_in = 0; 
@@ -59,8 +58,7 @@ initial begin
 	regA_in = 32'h0000FFFF; 
 	regB_in = 32'h00000000;
 	inm_in = 19'h00401;
-	#5;
-	#5 flush = 1;
+	#20 flush = 1;
 	#50;
 end
 

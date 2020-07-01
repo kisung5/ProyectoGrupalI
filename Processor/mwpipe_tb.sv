@@ -22,18 +22,17 @@ initial begin
 	regmem_in = 0;
 	regScr_in = 4'b0;
 	ALUrslt_in = 32'b0;
-	#50;
-	#5 pcload_in = 1;
+	#55;
+	#20 pcload_in = 1;
 	regw_in = 1; 
 	regmem_in = 0; 
 	regScr_in = 4'b0011;
 	ALUrslt_in = 32'h0000FFFF; 
-	#100;
-	#5 pcload_in = 0;
+	#20 pcload_in = 0;
 	regw_in = 1;
 	regmem_in = 0; 
 	regScr_in = 4'b0100;
-	ALUrslt_in = = 32'h0000FFFF; 
+	ALUrslt_in = 32'h0000FFFF; 
 	#100;
 end
 
