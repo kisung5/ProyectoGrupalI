@@ -4,6 +4,7 @@
 /simulation/
 /ALU_Modules/
 ALU_Modules.qsf
+ALU_Modules.qpf
 ALU_Modules.qws
 ALU_Modules_nativelink_simulation.rpt
 
