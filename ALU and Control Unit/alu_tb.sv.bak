@@ -1,0 +1,29 @@
+module testModules #(parameter N = 32);
+
+	logic [N-1:0] operandA, operandB, result;
+	logic [4:0] opcode;
+	logic zeroflag, negativeflag;
+	
+	
+	
+	//Comparator #(32) comparador (operandA,operandB, result);
+	alu #(32) alu_module (opcode, operandA, operandB, result, zeroflag, negativeflag);
+	
+	
+	
+	initial begin
+	// Pruebas de modulos separados
+	
+	
+	
+	// Pruebas de ALU
+	
+	#10 opcode = 5'b0000; operandA = 32; operandB = 32; // Prueba de modulo
+	#10 opcode = 5'b0001; operandA = 64; operandB = 32; // Prueba de suma
+	#10 opcode = 5'b0011; operandA = 64; operandB = 32; // Prueba de resta 
+	#10 opcode = 5'b0011; operandA = 32; operandB = 32; // Prueba de resta (zero flag)
+	#10 opcode = 5'b0011; operandA = 20; operandB = 32; // Prueba de resta (negative flag)
+	
+	end
+
+endmodule

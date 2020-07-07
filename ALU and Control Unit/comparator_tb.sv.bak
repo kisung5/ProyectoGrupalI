@@ -1,0 +1,9 @@
+module comparator_tb #(parameter N = 32);
+
+
+	logic [N-1:0] operandA, operandB;
+	logic eq, neq, lt, lte, gt, gte
+	
+	comparator #(32) comparator_module (operandA, operandB, eq, neq, lt, lte, gt, gte);
+
+endmodule 

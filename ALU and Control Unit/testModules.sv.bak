@@ -1,0 +1,16 @@
+module testModules #(parameter N = 32);
+
+	logic [N-1:0] operandA, operandB;
+	logic result;
+	
+	Comparator #(32) comparador (operandA,operandB, result);
+	
+	
+	initial begin
+	// Prueba de comparador
+	
+	operandA = 32; operandB = 32;
+	assert (result != 1'b1) else $error("32 == 32 failed");
+	end
+
+endmodule

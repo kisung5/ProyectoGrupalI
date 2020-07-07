@@ -1,0 +1,6 @@
+module SignExtend #(parameter N = 32) (input logic [N-1:0] operand,
+									 output logic [N-1:0] result);
+									 
+		assign result = 32'(signed'(operand));
+									 
+endmodule

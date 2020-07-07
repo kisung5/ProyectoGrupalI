@@ -1,0 +1,21 @@
+transcript on
+if {[file exists rtl_work]} {
+	vdel -lib rtl_work -all
+}
+vlib rtl_work
+vmap work rtl_work
+
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/alu_tb.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/overflow.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/operations_alu.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/_module.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/shiftleft.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/concatenate.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/comparator.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/adder.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/and_gate.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/subtract.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/multiply.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/shiftright.sv}
+vlog -sv -work work +incdir+C:/Users/brian/OneDrive\ -\ Estudiantes\ ITCR/TEC/Semestre\ 7/Arquitectura\ de\ Computadores\ 1/Proyecto\ 1/QuartusProject_1 {C:/Users/brian/OneDrive - Estudiantes ITCR/TEC/Semestre 7/Arquitectura de Computadores 1/Proyecto 1/QuartusProject_1/alu.sv}
+

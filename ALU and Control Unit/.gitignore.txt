@@ -1,0 +1,11 @@
+db
+incremental_db
+output_files
+simulation
+ALU_Modules
+ALU_Modules.qsf
+ALU_Modules.qws
+ALU_Modules_nativelink_simulation.rpt
+
+# ignore all logs
+*.bak

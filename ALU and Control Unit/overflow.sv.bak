@@ -1,0 +1,8 @@
+module overflow (input logic A31, B31, R31, opcode,
+							 output logic overflowflag);
+							 
+	
+									 
+		assign overflowflag = ( (A31 ^~ B31) && (A31 ^ R31) && (opcode[3] ^~ opcode[2]) && ~opcode[0]);
+									 
+endmodule

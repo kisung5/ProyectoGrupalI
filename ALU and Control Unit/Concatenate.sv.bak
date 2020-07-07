@@ -1,0 +1,7 @@
+module Concatenate #(parameter N = 32) (logic input [7:0] operandA, operandB,
+													 logic output [15:0] result);
+
+		assign result = {operandA, operandB};
+
+													 
+endmodule
