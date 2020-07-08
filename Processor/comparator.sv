@@ -1,18 +1,11 @@
-/*
-Comparator Module
-
-Inputs:
-    signal1: First signal to compare
-    signal2: Second signal to compare
-
-Outputs:
-    equal: indicate if signals are equal
-*/
-module comparator(input [9:0] signal1, signal2,
-                  output logic lower, greater, equal);
-
-assign lower   = signal1 < signal2 ? 1'b1 : 1'b0;
-assign greater = signal1 > signal2 ? 1'b1 : 1'b0;
-assign equal   = signal1 == signal2 ? 1'b1 : 1'b0;
-
-endmodule // comparator
+module comparator #(parameter N=32) (input logic [N-1:0] operandA, operandB,
+											 output logic eq, neq, lt, lte, gt, gte);
+											 
+		assign eq = (operandA == operandB);
+		assign neq = (operandA != operandB);
+		assign lt = (operandA < operandB);
+		assign lte = (operandA <= operandB);
+		assign gt = (operandA > operandB);
+		assign gte = (operandA >= operandB);
+		
+endmodule
