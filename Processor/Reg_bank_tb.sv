@@ -19,6 +19,15 @@ initial begin
 	wa3 = 4'b0;
 	wd3 = 32'b0;
 	r15 = 32'b0;
+	//rd1 = 32'b0;
+	//rd2 = 32'b0;
+	#5 ra1 = 4'h1;
+	ra2 = 4'h1;
+	#20 wa3 = 4'h0;
+	we3 = 1;
+	wd3 = 32'hFF;
+	#20 we3 = 1'b0;
+	ra1 = 4'h0;
 end
 
 endmodule 

@@ -1,7 +1,7 @@
 module Instr_mem(input logic [31:0] a,
 					output logic [31:0] rd);
 
-reg [31:0] RAM [23:0];
+logic [31:0] RAM [100:0];
 logic [31:0] data;
 
 assign rd = data;
@@ -9,7 +9,7 @@ assign rd = data;
 initial
 	$readmemh("memfile.dat",RAM);
 
-always_ff @(a)
+always @(a)
 begin : MEM_READ
 	data <= RAM[a[31:2]];
 end

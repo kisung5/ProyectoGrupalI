@@ -62,6 +62,12 @@ control_unit control (.opcode(inst_fetched[31:27]), .ALUControl(alu_control_o), 
 // Instruction immidiate extender to 32 bits
 zeroextend extender (.operand(inst_fetched[18:0]), .result(imm_ext_o));
 
+// Register bank
+Reg_bank register_bank(.clk(~clk), .we3(regw_w), 
+.ra1(inst_fetched[26:23]), .ra2(inst_fetched[22:19]), .wa3(register_src_w),
+.wd3(result_w), .r15(pc_adder_mux),
+.rd1(opA_o), .rd2(opB_o));
+
 // Decode/Execution instrucion pipelined register
 depipe decode_execution (.flush_E(), .clk(clk),
 // input control
