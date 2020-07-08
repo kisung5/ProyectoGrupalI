@@ -10,7 +10,7 @@ initial
 
 begin
 	
-	a = 31'b001;
+	a = 32'b001;
 	
 end
 

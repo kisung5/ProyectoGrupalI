@@ -3,10 +3,10 @@
 module mwpipe #(parameter N = 32, M = 4)
 (input logic clk,
 input logic pcload_M, regw_M, regmem_M,
-input [M-1:0] regScr_M,
+input [M-1:0] regScr_M, readdata_M,
 input [N-1:0] ALUrslt_M,
 output logic pcload_W, regw_W, regmem_W,
-output [M-1:0] regScr_W,
+output [M-1:0] regScr_W, readdata_W,
 output [N-1:0] ALUrslt_W);
 
 // Instrucion control flags/bit
@@ -25,5 +25,8 @@ register #(.N(M)) regScr (.wen(1'b1), .rst(1'b0), .clk(clk),
 
 register #(.N(N)) ALUrslt (.wen(1'b1), .rst(1'b0), .clk(clk), 
 	.in(ALUrslt_M), .out(ALUrslt_W));
+	
+register #(.N(N)) readData (.wen(1'b1), .rst(1'b0), .clk(clk), 
+	.in(readdata_M), .out(readdata_W));
 
 endmodule 

@@ -13,8 +13,31 @@ module operations_alu #(parameter N=32)(input logic [3:0] opcode,
 		lte_result, gt_result, gte_result;
 		
 		
-		
-		
+								  
+		always @(carryout, operandA, operandB, result)
+		begin
+			case (opcode)
+				// Arithmetic operations
+				4'b0000		: begin 						  			// Operation add
+									result <= adder_result; 
+									carryout <= carry_out;
+								  end
+				4'b0001		: result <= subtract_result; 		// Operation sub
+				4'b0010		: result <= multiply_result;	 	// Operation mul
+				4'b0011		: result <= module_result; 			// Operation mod
+				
+				// Logic operations
+				4'b0100		: result <= and_result; 				// Operation and
+				4'b0101		: result <= concatenate_result; 	// Operation concatenate
+				4'b0110		: result <= eq_result;				// Compare if two operators are equals
+				4'b0111		: result <= gt_result; 				// Compare if operandA is greater than operandB
+				4'b1000		: result <= shiftright_result; 	// Operation srl
+				4'b1001		: result <= shiftleft_result; 		// Operation sll
+				
+				default		: result <= 32'b0;
+			endcase
+		end
+
 		_module #(N) _module_module (operandA, operandB, module_result);
 		
 		adder #(N) adder_module (operandA, operandB, adder_result, carry_out);
@@ -33,30 +56,4 @@ module operations_alu #(parameter N=32)(input logic [3:0] opcode,
 		
 		comparator #(N) comparator_module (operandA, operandB, eq_result, neq_result, lt_result, 
 		lte_result, gt_result, gte_result);
-		
-		
-								  
-		always @(carryout, operandA, operandB, result)
-		begin
-			case (opcode)
-				// Arithmetic operations
-				4'b0000		: begin 						  			// Operation add
-									result = adder_result; 
-									carryout = carry_out;
-								  end
-				4'b0001		: result = subtract_result; 		// Operation sub
-				4'b0010		: result = multiply_result;	 	// Operation mul
-				4'b0011		: result = module_result; 			// Operation mod
-				
-				// Logic operations
-				4'b0100		: result = and_result; 				// Operation and
-				4'b0101		: result = concatenate_result; 	// Operation concatenate
-				4'b0110		: result = eq_result;				// Compare if two operators are equals
-				4'b0111		: result = gt_result; 				// Compare if operandA is greater than operandB
-				4'b1000		: result = shiftright_result; 	// Operation srl
-				4'b1001		: result = shiftleft_result; 		// Operation sll
-				
-				default		: result = 32*(1'bx);
-			endcase
-		end							  
 endmodule 
