@@ -1,13 +1,13 @@
 module mwpipe_tb;
 
-logic clk, pcload_in, regw_in, regmem_in;
+logic clk, rst, pcload_in, regw_in, regmem_in;
 logic pcload_out, regw_out, regmem_out;
 logic [3:0] regScr_in, regScr_out;
 logic [31:0] ALUrslt_in, ALUrslt_out;
 
 // address, clock, data, wren, q
 
-mwpipe DUT (.clk(clk), 
+mwpipe DUT (.clk(clk), .rst(rst), 
 	.pcload_M(pcload_in), .regw_M(regw_in), .regmem_M(regmem_in), 
 	.regScr_M(regScr_in), .ALUrslt_M(ALUrslt_in),
 	.pcload_W(pcload_out), .regw_W(regw_out), .regmem_W(regmem_out), 

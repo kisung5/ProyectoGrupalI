@@ -3,8 +3,7 @@ module depipe_tb;
 logic clk, flush, pcload_in, regw_in, memw_in, regmem_in, branch_in, ALUope_in, flag_in;
 logic pcload_out, regw_out, memw_out, regmem_out, branch_out, ALUope_out, flag_out;
 logic [3:0] ALUctrl_in, regScr_in, ALUctrl_out, regScr_out;
-logic [31:0] regA_in, regB_in, regA_out, regB_out;
-logic [18:0] inm_in, inm_out;
+logic [31:0] regA_in, regB_in, regA_out, regB_out, inm_in, inm_out;
 
 // address, clock, data, wren, q
 
