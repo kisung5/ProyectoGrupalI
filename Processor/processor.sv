@@ -22,7 +22,7 @@ imm_ext_e; // imm wire in execution stage
 logic [31:0] opA_o, opB_o, // operands in point of origin
 opA_e, opB_e; // operands in execution stage
 
-// Fetch
+// --Fetch--
 
 // PC register
 register #(.N(32)) PC (.wen(), .rst(1'b0), .clk(clk), .in(pc_mux_reg), .out(pcf));
@@ -36,14 +36,14 @@ multiplexer pc_load_select (.d1(pc_adder_mux), .d2(), .d3(), .selector(), .out(p
 // Fetch/Decode instruction pipelined register
 fdpipe fetch_decode (.stall_D(), .flush_F(), .clk(clk), .inst_F(inst), .inst_D(inst_fetched));
 
-// Decode
+// --Decode--
 
 // Control unit, only operates in decode stage and is a combinational unit.
-control_unit control (.opcode(inst_fetched[4:0]), .ALUControl(alu_control_o), .RegW(regw_o), 
+control_unit control (.opcode(inst_fetched[31:27]), .ALUControl(alu_control_o), .RegW(regw_o), 
 .ALUSrc(alusrc_o), .BranchE(branche_o), .MemW(memw_o), .MemtoReg(memtoreg_o), .ImmE(imme_o));
 
 // Instruction immidiate extender to 32 bits
-signextend extender (.operand(inst_fetched[31:13]), .result(imm_ext_o));
+signextend extender (.operand(inst_fetched[18:0]), .result(imm_ext_o));
 
 // Decode/Execution instrucion pipelined register
 depipe decode_execution (.flush_E(), .clk(clk),
@@ -51,18 +51,26 @@ depipe decode_execution (.flush_E(), .clk(clk),
 .pcload_D(), .regw_D(regw_o), .memw_D(memw_o), .regmem_D(memtoreg_o), .branch_D(branche_o), 
 .ALUope_D(alusrc_o), .flag_D(), .ALUctrl_D(alu_control_o),
 // input data
-.regScr_D(inst_fetched[16:13]), .regA_D(opA_o), .regB_D(opB_o), .inm_D(imm_ext_o),
+.regScr_D(inst_fetched[18:15]), .regA_D(opA_o), .regB_D(opB_o), .inm_D(imm_ext_o),
 // output control
 .pcload_E(), .regw_E(regw_e), .memw_E(memw_e), .regmem_E(memtoreg_e), .branch_E(branche_e), 
 .ALUope_E(alusrc_e), .flag_E(), .ALUctrl_E(alu_control_e),
 // output data 
 .regScr_E(register_src_e), .regA_E(opA_e), .regB_E(opB_e), .inm_E(imm_ext_e));
 
-// Operand A selector MUX
+// --Execution--
+
+// Operand A selector MUX for hazard unit
 multiplexer opA_select (.d1(opA_e), .d2(), .d3(), .selector(), .out());
 
-// Operand B selector MUX
-multiplexer opB_select (.d1(opB_e), .d2(), .d3(), .selector(), .out());
+// Operand B selector MUX for hazard unit
+multiplexer opB_select (.d1(opB_e), .d2(), .d3(), .selector(), .out(opB_hazard_imm));
+
+logic [31:0] opB_hazard_imm;
+
+// Operand B selector MUX register or imm
+multiplexer opB_select1 (.d1(opB_hazard_imm), .d2(imm_ext_e), .d3(), .selector(), .out());
+
 
 // ALU
 alu alu_unit (.opcode(alu_control_e), .operandA(), .operandB(), .result(),
