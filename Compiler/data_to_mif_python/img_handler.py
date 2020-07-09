@@ -4,16 +4,20 @@ import sys
 
 
 def txt_to_mif():
-    # Image in 'data.txt' file, using int values
-    data_file = open("data.txt", "r")
+    # This function extracts the data from the source text file.
+    # Image in '6.txt' file, using int values
+    data_file = open("6.txt", "r")
     lines = data_file.readlines()
     data_file.close()
     data_stream = lines[5]
-    data_stream = data_stream.split(' ')
+    data_stream = data_stream.split()
     bitmap = np.array(data_stream)
     bitmap = bitmap.astype(np.uint8)
-    string_array = ["DEPTH = " + str(len(bitmap)) + ";\n", "WIDTH = " + str(8) + ";\n",
-                    "ADDRESS_RADIX = DEC;\n", "DATA_RADIX = DEC;\n", "CONTENT\n", "BEGIN\n"]
+    string_array = ["DEPTH = " + str(len(bitmap)) + ";\n",
+                    "WIDTH = " + str(8) + ";\n",
+                    "ADDRESS_RADIX = DEC;\n",
+                    "DATA_RADIX = DEC;\n",
+                    "CONTENT\n", "BEGIN\n"]
 
     counter = 0
     for i in bitmap:
@@ -22,6 +26,12 @@ def txt_to_mif():
         temp_string += ";\n"
         string_array.append(temp_string)
         counter += 1
+    # for j in range(int(len(bitmap)/2)):
+    #     temp_string = str(counter) + " : "
+    #     temp_string += str(0)
+    #     temp_string += ";\n"
+    #     string_array.append(temp_string)
+    #     counter += 1
 
     string_array.append("END;")
     # Save raw data/metadata
@@ -31,10 +41,11 @@ def txt_to_mif():
 
 
 def rsa():
-    data_file = open("data.txt", "r")
+    # This function executes the rsa decryption method to 6.txt
+    data_file = open("6.txt", "r")
     lines = data_file.readlines()
     data_stream = lines[5]
-    data_stream = data_stream.split(' ')
+    data_stream = data_stream.split()
 
     data_array = []
     counter = 0
@@ -54,7 +65,7 @@ def rsa():
     print(max(encrypt_array))  # max encrypt number 3931 = 1111 0101 1011
     print(len(data_array))
     bitmap = np.array(data_array)
-    bitmap = np.array(bitmap).reshape([640, 480])
+    bitmap = np.array(bitmap).reshape([320, 480])
     bitmap = bitmap.astype(np.uint8)
     im = Image.fromarray(bitmap)
     im.save('image.jpg', 'jpeg')
