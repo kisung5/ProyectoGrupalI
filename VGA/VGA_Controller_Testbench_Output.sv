@@ -1,6 +1,7 @@
 module VGA_Controller_Testbench_Output;
 
 	logic clk = 0;
+	logic selected = 0;
 	logic h_sync;
 	logic v_sync;
 	logic [7:0] rgb;
@@ -10,11 +11,12 @@ module VGA_Controller_Testbench_Output;
 	
 	logic reset;
 	integer file;
-	longint i;
+	integer i;
 	
-	VGA_Controller VGA (clk, 1'b0, h_sync, v_sync, rgb, clk_25mhz, sync_n, blank_n);
+	VGA_Controller VGA (clk, selected, h_sync, v_sync, rgb, clk_25mhz, sync_n, blank_n);
 	
-	always #20 clk = ~clk;
+	always #5 clk = ~clk;
+	always #8400000 selected = ~selected;
 
 	//Clock and reset release
 	initial begin
@@ -30,11 +32,10 @@ module VGA_Controller_Testbench_Output;
 		@(negedge reset); //Wait for reset to be released
 		@(posedge clk);   //Wait for fisrt clock out of reset
 
-		for (i = 0; i<64'd2500000; i=i+1)
+		for (i = 0; i<840100; i=i+1)
 		begin
-			@(posedge clk);
-			//$fwrite(file, "%0d ns: %b %b %b %b %b\n", (20 * i), h_sync, v_sync, rgb[7:5], rgb[4:2], rgb[1:0]);
-			$fwrite(file, "%b ", rgb);
+			@(posedge clk_25mhz);
+			$fwrite(file, "%b %b %b\n", h_sync, v_sync, rgb);
 		end
 
 		$fclose(file);  

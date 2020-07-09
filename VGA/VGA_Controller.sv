@@ -41,7 +41,6 @@ module VGA_Controller (
 	// Black color
 	assign black = 8'h0;
 	
-
 	always @*
 	begin		
 		// If the selected image is decrypted
@@ -51,10 +50,22 @@ module VGA_Controller (
 			if(h_count_value >= 144 && h_count_value < 464 && v_count_value >= 35 && v_count_value < 515)
 			begin
 				address = (h_count_value - 144)*480 + v_count_value - 35;
-				// Sacalar color quantization
-				rgb[7:5] = current_pixel_decrypted[7:5];
-				rgb[4:2] = current_pixel_decrypted[7:5];
-				rgb[1:0] = current_pixel_decrypted[7:6];
+				rgb = current_pixel_decrypted;
+			end
+			else
+			begin
+				address = 0;
+				rgb = 8'b0;
+			end
+		end
+		// If the selected image is encrypted
+		else if (selected == 1'b1)
+		begin
+			// If the horizontal and vertical counters are in the display area and image area
+			if(h_count_value >= 144 && h_count_value < 784 && v_count_value >= 35 && v_count_value < 515)
+			begin
+				address = (h_count_value - 144)*480 + v_count_value - 35;
+				rgb = current_pixel_encrypted;
 			end
 			else
 			begin
