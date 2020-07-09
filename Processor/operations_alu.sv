@@ -8,8 +8,8 @@ output logic carryout);
 //logic [N-1:0] module_result, adder_result, and_result, subtract_result, 
 //multiply_result, concatenate_result ,shiftright_result, shiftleft_result;
 
-logic carry_out, eq_result, neq_result, lt_result, 
-lte_result, gt_result, gte_result;
+logic carry_out; // eq_result, neq_result, lt_result, 
+//lte_result, gt_result, gte_result;
 
 								  
 always_comb //@(opcode, operandA, operandB)

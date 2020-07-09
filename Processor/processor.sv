@@ -40,6 +40,8 @@ alu_result_w, // result data from the ALU to Writeback stage
 read_data_w, // read data from Memory to Writeback stage
 result_w; // data selected for writeback in register bank
 
+logic select_pc, stall_fetch, flush_decode; //control bits for the control hazard unit
+
 assign m_data = alu_result_m;
 
 // %% List of modules per stage %%
@@ -53,10 +55,11 @@ register #(.N(32)) PC (.wen(1'b1), .rst(rst), .clk(clk), .in(pc_mux_reg), .out(p
 adder pc_adder (.operandA(pcf), .operandB(32'b100), .result(pc_adder_mux), .cout());
 
 // Mux selector for PC load data
-multiplexer pc_load_select (.d1(pc_adder_mux), .d2(imm_ext_o), .d3(32'b0), .selector(2'b0), .out(pc_mux_reg));
+multiplexer pc_load_select (.d1(pc_adder_mux), .d2(imm_ext_o), .d3(32'b0), 
+.selector({1'b0,select_pc}), .out(pc_mux_reg));
 
 // Fetch/Decode instruction pipelined register
-fdpipe fetch_decode (.stall_D(1'b0), .flush_F(rst || 1'b0), .clk(clk), 
+fdpipe fetch_decode (.stall_D(stall_fetch), .flush_F(rst || flush_decode), .clk(clk), 
 .inst_F(inst), .inst_D(inst_fetched));
 
 // --Decode--
@@ -81,6 +84,12 @@ Reg_bank register_bank(.clk(~clk), .rst(rst), .we3(regw_w),
 .ra1(registerA_decode), .ra2(registerB_decode), .wa3(register_src_w),
 .wd3(result_w),
 .rd1(opA_o), .rd2(opB_o));
+
+// Control hazard unit for branches
+control_hazard_unit control_hazard
+(.branchE(branche_o), .opCode(inst_fetched[31:27]),
+.opeA(opA_o), .opeB(opB_o),
+.select_pc(select_pc), .flush(flush_decode), .stall(stall_fetch));
 
 // Decode/Execution instrucion pipelined register
 depipe decode_execution (.flush_E(rst || 1'b0), .clk(clk),

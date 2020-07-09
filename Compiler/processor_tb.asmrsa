@@ -1,6 +1,14 @@
-addi r1 zero 400
-addi r2 zero 300
-addi r4 zero 300
-addi r5 zero 300
-addi r6 zero 300
-add r3 r1 r2
+start:
+    addi r1 zero 400
+    addi r2 zero 300
+    addi r4 zero 300
+    addi r5 zero 14
+    addi r6 zero 15
+    add r3 r1 r2
+    bgt r3 r2 finish
+    sub r3 r1 r2
+    add r4 r1 r2
+    mod r5 r1 r2
+finish:
+    beq r2 r3 start
+    beq r2 r2 start
