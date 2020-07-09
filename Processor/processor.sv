@@ -14,7 +14,9 @@ m_data); // data output to data memory
 logic [31:0] inst_fetched; // wire between fdpipe and register bank
 logic [3:0] register_src_e, // source register to Execution stage
 register_src_m, // source register to Memory stage
-register_src_w; // source register to Writeback stage
+register_src_w, // source register to Writeback stage
+registerA_decode, // register A to decode in Register Bank
+registerB_decode; // register B to decode in Register Bank
 
 logic [3:0] alu_control_o, // function code for ALU from the control unit
 alu_control_e; // function code for ALU to Execution stage
@@ -51,7 +53,7 @@ register #(.N(32)) PC (.wen(1'b1), .rst(rst), .clk(clk), .in(pc_mux_reg), .out(p
 adder pc_adder (.operandA(pcf), .operandB(32'b100), .result(pc_adder_mux), .cout());
 
 // Mux selector for PC load data
-multiplexer pc_load_select (.d1(pc_adder_mux), .d2(32'b0), .d3(32'b0), .selector(2'b0), .out(pc_mux_reg));
+multiplexer pc_load_select (.d1(pc_adder_mux), .d2(imm_ext_o), .d3(32'b0), .selector(2'b0), .out(pc_mux_reg));
 
 // Fetch/Decode instruction pipelined register
 fdpipe fetch_decode (.stall_D(1'b0), .flush_F(rst || 1'b0), .clk(clk), 
@@ -66,9 +68,17 @@ control_unit control (.opcode(inst_fetched[31:27]), .ALUControl(alu_control_o), 
 // Instruction immidiate extender to 32 bits
 zeroextend extender (.operand(inst_fetched[18:0]), .result(imm_ext_o));
 
+// MUX selector for register A
+multiplexer #(.N(4)) registerA_mux (.d1(inst_fetched[22:19]), .d2(inst_fetched[26:23]), .d3(4'b0), 
+.selector({1'b0, branche_o}), .out(registerA_decode));
+
+// MUX selector for register B
+multiplexer #(.N(4)) registerB_mux (.d1(inst_fetched[18:15]), .d2(inst_fetched[22:19]), .d3(4'b0), 
+.selector({1'b0, branche_o}), .out(registerB_decode));
+
 // Register bank
 Reg_bank register_bank(.clk(~clk), .rst(rst), .we3(regw_w), 
-.ra1(inst_fetched[26:23]), .ra2(inst_fetched[22:19]), .wa3(register_src_w),
+.ra1(registerA_decode), .ra2(registerB_decode), .wa3(register_src_w),
 .wd3(result_w),
 .rd1(opA_o), .rd2(opB_o));
 
@@ -78,7 +88,7 @@ depipe decode_execution (.flush_E(rst || 1'b0), .clk(clk),
 .regw_D(regw_o), .memw_D(memw_o), .regmem_D(memtoreg_o), .branch_D(branche_o), 
 .ALUope_D(alusrc_o), .flag_D(), .ALUctrl_D(alu_control_o),
 // input data
-.regScr_D(inst_fetched[18:15]), .regA_D(opA_o), .regB_D(opB_o), .inm_D(imm_ext_o),
+.regScr_D(inst_fetched[26:23]), .regA_D(opA_o), .regB_D(opB_o), .inm_D(imm_ext_o),
 // output control
 .regw_E(regw_e), .memw_E(memw_e), .regmem_E(memtoreg_e), .branch_E(branche_e), 
 .ALUope_E(alusrc_e), .flag_E(), .ALUctrl_E(alu_control_e),
@@ -88,10 +98,12 @@ depipe decode_execution (.flush_E(rst || 1'b0), .clk(clk),
 // --Execution--
 
 // Operand A selector MUX for hazard unit
-multiplexer opA_select (.d1(opA_e), .d2(32'b0), .d3(32'b0), .selector(2'b0), .out(opA_hazard));
+multiplexer opA_select (.d1(opA_e), .d2(alu_result_m), .d3(result_w), 
+.selector(2'b0), .out(opA_hazard));
 
 // Operand B selector MUX for hazard unit
-multiplexer opB_select (.d1(opB_e), .d2(32'b0), .d3(32'b0), .selector(2'b0), .out(opB_hazard_imm));
+multiplexer opB_select (.d1(opB_e), .d2(alu_result_m), .d3(result_w), 
+.selector(2'b0), .out(opB_hazard_imm));
 
 // Operand B selector MUX register or imm
 multiplexer opB_select1 (.d1(opB_hazard_imm), .d2(imm_ext_e), .d3(32'b0), 
