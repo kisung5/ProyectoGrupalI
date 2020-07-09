@@ -4,17 +4,14 @@
 // Inputs and outputs decoded and control results from instruction
 module depipe #(parameter N = 32, M = 4)
 (input logic flush_E, clk,
-input logic pcload_D, regw_D, memw_D, regmem_D, branch_D, ALUope_D, flag_D,
+input logic regw_D, memw_D, regmem_D, branch_D, ALUope_D, flag_D,
 input [M-1:0] ALUctrl_D, regScr_D,
 input [N-1:0] regA_D, regB_D, inm_D,
-output logic pcload_E, regw_E, memw_E, regmem_E, branch_E, ALUope_E, flag_E,
+output logic regw_E, memw_E, regmem_E, branch_E, ALUope_E, flag_E,
 output [M-1:0] ALUctrl_E, regScr_E,
 output [N-1:0] regA_E, regB_E, inm_E);
 
 // Instrucion control flags/bit
-register #(.N(1)) pcload (.wen(1'b1), .rst(flush_E), .clk(clk), 
-	.in(pcload_D), .out(pcload_E));
-	
 register #(.N(1)) regw (.wen(1'b1), .rst(flush_E), .clk(clk), 
 	.in(regw_D), .out(regw_E));
 	

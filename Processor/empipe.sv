@@ -2,17 +2,14 @@
 // Inputs and outputs ALU results, registers, address, and control
 module empipe #(parameter N = 32, M = 4)
 (input logic clk, rst,
-input logic pcload_E, regw_E, memw_E, regmem_E,
+input logic regw_E, memw_E, regmem_E,
 input [M-1:0] regScr_E,
 input [N-1:0] ALUrslt_E, address_E,
-output logic pcload_M, regw_M, memw_M, regmem_M,
+output logic regw_M, memw_M, regmem_M,
 output [M-1:0] regScr_M,
 output [N-1:0] ALUrslt_M, address_M);
 
-// Instrucion control flags/bit
-register #(.N(1)) pcload (.wen(1'b1), .rst(rst), .clk(clk), 
-	.in(pcload_E), .out(pcload_M));
-	
+// Instrucion control flags/bit	
 register #(.N(1)) regw (.wen(1'b1), .rst(rst), .clk(clk), 
 	.in(regw_E), .out(regw_M));
 	

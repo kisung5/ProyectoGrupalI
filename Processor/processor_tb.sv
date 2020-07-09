@@ -6,7 +6,7 @@ logic [31:0] inst, data_read, pc, address, data_write;
 processor DUT 
 (.clk(clk), .rst(rst),
 .inst(inst), // instruction input from inst memory
-.data(data_read), // data input from data memory
+.input_data(data_read), // data input from data memory
 .memw_m(mem_e), // memory write enable output control
 .pcf(pc), // pc address output to inst memory
 .m_address(address), // memory address output to data memory
@@ -20,10 +20,13 @@ initial begin
 	data_read = 32'b0;
 	rst = 1;
 	#25 rst = 0;
-	inst = 32'hE04F000F;
-	#20 inst = 32'hE2802005;
-	#20 inst = 32'hE280300C;
-	#20 inst = 32'hE2437009;
+	inst = 32'b10000000100000000000000110010000;
+	#20 inst = 32'b10000001000000000000000100101100;
+	#20 inst = 32'b10000010000000000000000100101100;
+	#20 inst = 32'b10000010100000000000000100101100;
+	#20 inst = 32'b10000011000000000000000100101100;
+	#20 inst = 32'b00001001100010010000000000000000;
+	#20 inst = 32'b0;
 end
 
 endmodule 

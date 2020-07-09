@@ -2,17 +2,14 @@
 // Inputs and outputs ALU results, registers, and control
 module mwpipe #(parameter N = 32, M = 4)
 (input logic clk, rst,
-input logic pcload_M, regw_M, regmem_M,
+input logic regw_M, regmem_M,
 input [M-1:0] regScr_M, 
 input [N-1:0] ALUrslt_M, readdata_M,
-output logic pcload_W, regw_W, regmem_W,
+output logic regw_W, regmem_W,
 output [M-1:0] regScr_W, 
 output [N-1:0] ALUrslt_W, readdata_W);
 
 // Instrucion control flags/bit
-register #(.N(1)) pcload (.wen(1'b1), .rst(rst), .clk(clk), 
-	.in(pcload_M), .out(pcload_W));
-	
 register #(.N(1)) regw (.wen(1'b1), .rst(rst), .clk(clk), 
 	.in(regw_M), .out(regw_W));
 	
