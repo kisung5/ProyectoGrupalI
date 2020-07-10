@@ -1,11 +1,8 @@
 start:
     addi r1 zero 400
-    addi r2 zero 300
-    addi r4 zero 300
-    addi r5 zero 14
-    addi r6 zero 15
+    addi r2 zero 950
     lb r3 r1 0
-    lb r4 zero 0
-    sb r1 zero 204800
+    add r4 r2 r3
+    sub r5 r4 r1
 finish:
     beq r2 r2 start

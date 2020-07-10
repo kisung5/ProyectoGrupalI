@@ -18,7 +18,8 @@ register_src_w, // source register to Writeback stage
 registerB_decode; // register B to decode in Register Bank
 
 logic [3:0] alu_control_o, // function code for ALU from the control unit
-alu_control_e; // function code for ALU to Execution stage
+alu_control_e, // function code for ALU to Execution stage
+register_A, register_B; // register bypass from Decode for the forward unit
 
 logic regw_o, alusrc_o, branche_o, memw_o, memtoreg_o, // control bits from the control unit
 regw_e, alusrc_e, memw_e, memtoreg_e, // control bits to Execution stage
@@ -41,6 +42,8 @@ result_w; // data selected for writeback in register bank
 
 logic select_pc, stall_fetch, flush_decode, //control bits for the control hazard unit
 regB; // single control for mux select for operand B
+
+logic [1:0] select_op_A, select_op_B;
 
 assign m_address = alu_result_m;
 
@@ -94,21 +97,23 @@ depipe decode_execution (.flush_E(rst || 1'b0), .clk(clk),
 .ALUope_D(alusrc_o), .ALUctrl_D(alu_control_o),
 // input data
 .regScr_D(inst_fetched[26:23]), .regA_D(opA_o), .regB_D(opB_o), .inm_D(imm_ext_o),
+.regAD(inst_fetched[22:19]), .regBD(registerB_decode),
 // output control
 .regw_E(regw_e), .memw_E(memw_e), .regmem_E(memtoreg_e),
 .ALUope_E(alusrc_e), .ALUctrl_E(alu_control_e),
 // output data 
-.regScr_E(register_src_e), .regA_E(opA_e), .regB_E(opB_e), .inm_E(imm_ext_e));
+.regScr_E(register_src_e), .regA_E(opA_e), .regB_E(opB_e), .inm_E(imm_ext_e),
+.regAE(register_A), .regBE(register_B));
 
 // --Execution--
 
 // Operand A selector MUX for hazard unit
-multiplexer opA_select (.d1(opA_e), .d2(alu_result_m), .d3(result_w), 
-.selector(2'b0), .out(opA_hazard));
+multiplexer_4 opA_select (.d1(opA_e), .d2(alu_result_m), .d3(input_data), .d4(result_w), 
+.selector(select_op_A), .out(opA_hazard));
 
 // Operand B selector MUX for hazard unit
-multiplexer opB_select (.d1(opB_e), .d2(alu_result_m), .d3(result_w), 
-.selector(2'b0), .out(opB_hazard_imm));
+multiplexer_4 opB_select (.d1(opB_e), .d2(alu_result_m), .d3(input_data), .d4(result_w), 
+.selector(select_op_B), .out(opB_hazard_imm));
 
 // Operand B selector MUX register or imm
 multiplexer opB_select1 (.d1(opB_hazard_imm), .d2(imm_ext_e), .d3(32'b0), 
@@ -147,5 +152,11 @@ mwpipe memory_writeback (.clk(clk), .rst(rst),
 // Selector MUX for memory data result or ALU operation result
 multiplexer memory_alu_mux (.d1(alu_result_w), .d2(read_data_w), .d3(32'b0), 
 .selector({1'b0,memtoreg_w}), .out(result_w));
+
+// Data hazard unit
+Data_Hazard_Forward data_hazard_unit
+(.memtoreg_M(memtoreg_m), .regw_m(regw_m), .regw_w(regw_w),
+.RegA_E(register_A), .RegB_E(register_B), .Rd_M(register_src_m), .Rd_WB(register_src_w),
+.S_Hazard_A(select_op_A), .S_Hazard_B(select_op_B));
 
 endmodule 
