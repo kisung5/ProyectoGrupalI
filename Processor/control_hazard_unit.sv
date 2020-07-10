@@ -8,7 +8,7 @@ logic eq, gt;
 logic [2:0] logic_array;
 
 comparator operand_comparator (.operandA(opeA), .operandB(opeB),
-.eq(eq), .neq(), .lt(), .lte(), .gt(gt), .gte());
+.eq(eq), .neq(), .lt(gt), .lte(), .gt(), .gte());
 
 always_comb begin
 	if (branchE & ((eq & opCode == 5'b01000) | (gt & opCode == 5'b01001)))

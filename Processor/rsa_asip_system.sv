@@ -23,7 +23,7 @@ processor cpu
 
 // Data memory, RAM type. 
 data_memory ram
-(.address(m_address[18:0]), .clock(clk), .data(m_write_data[7:0]),
+(.address(m_address[18:0]), .clock(~clk), .data(m_write_data[7:0]),
 .wren(m_write_e), .q(m_read_data));
 
 // Instruction memory, ROM type

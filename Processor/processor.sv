@@ -15,14 +15,13 @@ logic [31:0] inst_fetched; // wire between fdpipe and register bank
 logic [3:0] register_src_e, // source register to Execution stage
 register_src_m, // source register to Memory stage
 register_src_w, // source register to Writeback stage
-registerA_decode, // register A to decode in Register Bank
 registerB_decode; // register B to decode in Register Bank
 
 logic [3:0] alu_control_o, // function code for ALU from the control unit
 alu_control_e; // function code for ALU to Execution stage
 
 logic regw_o, alusrc_o, branche_o, memw_o, memtoreg_o, // control bits from the control unit
-regw_e, alusrc_e, branche_e, memw_e, memtoreg_e, // control bits to Execution stage
+regw_e, alusrc_e, memw_e, memtoreg_e, // control bits to Execution stage
 regw_m, memtoreg_m, // control bits to Memory stage
 regw_w, memtoreg_w; // control bits to Writeback stage
 
@@ -40,9 +39,10 @@ alu_result_w, // result data from the ALU to Writeback stage
 read_data_w, // read data from Memory to Writeback stage
 result_w; // data selected for writeback in register bank
 
-logic select_pc, stall_fetch, flush_decode; //control bits for the control hazard unit
+logic select_pc, stall_fetch, flush_decode, //control bits for the control hazard unit
+regB; // single control for mux select for operand B
 
-assign m_data = alu_result_m;
+assign m_address = alu_result_m;
 
 // %% List of modules per stage %%
 
@@ -66,22 +66,18 @@ fdpipe fetch_decode (.stall_D(stall_fetch), .flush_F(rst || flush_decode), .clk(
 
 // Control unit, only operates in decode stage and is a combinational unit.
 control_unit control (.opcode(inst_fetched[31:27]), .ALUControl(alu_control_o), .RegW(regw_o), 
-.ALUSrc(alusrc_o), .BranchE(branche_o), .MemW(memw_o), .MemtoReg(memtoreg_o));
+.ALUSrc(alusrc_o), .BranchE(branche_o), .MemW(memw_o), .MemtoReg(memtoreg_o), .regB(regB));
 
 // Instruction immidiate extender to 32 bits
 zeroextend extender (.operand(inst_fetched[18:0]), .result(imm_ext_o));
 
-// MUX selector for register A
-multiplexer #(.N(4)) registerA_mux (.d1(inst_fetched[22:19]), .d2(inst_fetched[26:23]), .d3(4'b0), 
-.selector({1'b0, branche_o}), .out(registerA_decode));
-
 // MUX selector for register B
-multiplexer #(.N(4)) registerB_mux (.d1(inst_fetched[18:15]), .d2(inst_fetched[22:19]), .d3(4'b0), 
-.selector({1'b0, branche_o}), .out(registerB_decode));
+multiplexer #(.N(4)) registerB_mux (.d1(inst_fetched[18:15]), .d2(inst_fetched[26:23]), .d3(4'b0), 
+.selector({1'b0, regB}), .out(registerB_decode));
 
 // Register bank
 Reg_bank register_bank(.clk(~clk), .rst(rst), .we3(regw_w), 
-.ra1(registerA_decode), .ra2(registerB_decode), .wa3(register_src_w),
+.ra1(inst_fetched[22:19]), .ra2(registerB_decode), .wa3(register_src_w),
 .wd3(result_w),
 .rd1(opA_o), .rd2(opB_o));
 
@@ -94,13 +90,13 @@ control_hazard_unit control_hazard
 // Decode/Execution instrucion pipelined register
 depipe decode_execution (.flush_E(rst || 1'b0), .clk(clk),
 // input control
-.regw_D(regw_o), .memw_D(memw_o), .regmem_D(memtoreg_o), .branch_D(branche_o), 
-.ALUope_D(alusrc_o), .flag_D(), .ALUctrl_D(alu_control_o),
+.regw_D(regw_o), .memw_D(memw_o), .regmem_D(memtoreg_o),  
+.ALUope_D(alusrc_o), .ALUctrl_D(alu_control_o),
 // input data
 .regScr_D(inst_fetched[26:23]), .regA_D(opA_o), .regB_D(opB_o), .inm_D(imm_ext_o),
 // output control
-.regw_E(regw_e), .memw_E(memw_e), .regmem_E(memtoreg_e), .branch_E(branche_e), 
-.ALUope_E(alusrc_e), .flag_E(), .ALUctrl_E(alu_control_e),
+.regw_E(regw_e), .memw_E(memw_e), .regmem_E(memtoreg_e),
+.ALUope_E(alusrc_e), .ALUctrl_E(alu_control_e),
 // output data 
 .regScr_E(register_src_e), .regA_E(opA_e), .regB_E(opB_e), .inm_E(imm_ext_e));
 
@@ -128,11 +124,11 @@ empipe execution_memory (.clk(clk), .rst(rst),
 // input control
 .regw_E(regw_e), .memw_E(memw_e), .regmem_E(memtoreg_e),
 // input data
-.regScr_E(register_src_e), .ALUrslt_E(alu_result_e), .address_E(opB_hazard),
+.regScr_E(register_src_e), .ALUrslt_E(opB_hazard_imm), .address_E(alu_result_e),
 // output control
 .regw_M(regw_m), .memw_M(memw_m), .regmem_M(memtoreg_m),
 // output data
-.regScr_M(register_src_m), .ALUrslt_M(alu_result_m), .address_M(m_address));
+.regScr_M(register_src_m), .ALUrslt_M(m_data), .address_M(alu_result_m));
 
 // --Memory--
 // This stage has no modules, data memory is outside the processor

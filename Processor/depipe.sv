@@ -4,10 +4,10 @@
 // Inputs and outputs decoded and control results from instruction
 module depipe #(parameter N = 32, M = 4)
 (input logic flush_E, clk,
-input logic regw_D, memw_D, regmem_D, branch_D, ALUope_D, flag_D,
+input logic regw_D, memw_D, regmem_D, ALUope_D,
 input [M-1:0] ALUctrl_D, regScr_D,
 input [N-1:0] regA_D, regB_D, inm_D,
-output logic regw_E, memw_E, regmem_E, branch_E, ALUope_E, flag_E,
+output logic regw_E, memw_E, regmem_E, ALUope_E,
 output [M-1:0] ALUctrl_E, regScr_E,
 output [N-1:0] regA_E, regB_E, inm_E);
 
@@ -21,14 +21,8 @@ register #(.N(1)) memw (.wen(1'b1), .rst(flush_E), .clk(clk),
 register #(.N(1)) regmem (.wen(1'b1), .rst(flush_E), .clk(clk), 
 	.in(regmem_D), .out(regmem_E));
 	
-register #(.N(1)) branch (.wen(1'b1), .rst(flush_E), .clk(clk), 
-	.in(branch_D), .out(branch_E));
-	
 register #(.N(1)) ALUope (.wen(1'b1), .rst(flush_E), .clk(clk), 
 	.in(ALUope_D), .out(ALUope_E));
-	
-register #(.N(1)) flag (.wen(1'b1), .rst(flush_E), .clk(clk), 
-	.in(flag_D), .out(flag_E));
 
 // ALU control and register data
 register #(.N(M)) ALUctrl (.wen(1'b1), .rst(flush_E), .clk(clk), 
