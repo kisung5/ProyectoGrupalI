@@ -2,9 +2,10 @@
 // clk_50mhz of the DE1 SOC FPGA, clock generator for SOC is 50MHz
 
 module rsa_asip_system
-(input logic clk, rst, selected,
-output logic h_sync, v_sync, clk_25mhz, sync_n, blank_n,
-output logic [7:0] rgb);
+(input logic clk, rst,
+output [31:0] pc);//, selected,
+//output logic h_sync, v_sync, clk_25mhz, sync_n, blank_n,
+//output logic [7:0] rgb);
 
 logic m_write_e;
 logic [7:0] m_read_data;
@@ -29,9 +30,10 @@ data_memory ram
 Instr_mem rom
 (.a(pc_f), .rd(inst));
 
+assign pc = pc_f;
 // Single output of the system, VGA controller for a 640x480 display
-VGA_Controller Vga_controller (.clk(clk), .selected(selected), 
-.h_sync(h_sync), .v_sync(v_sync), .rgb(rgb),
-.clk_25mhz(clk_25mhz), .sync_n(sync_n), .blank_n(blank_n));
+//VGA_Controller Vga_controller (.clk(clk), .selected(selected), 
+//.h_sync(h_sync), .v_sync(v_sync), .rgb(rgb),
+//.clk_25mhz(clk_25mhz), .sync_n(sync_n), .blank_n(blank_n));
 
 endmodule 
