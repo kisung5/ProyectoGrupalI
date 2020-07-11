@@ -29,17 +29,24 @@ module VGA_Controller (
 	// Based on VGA standards
 	assign h_sync = (h_count_value < 96) ? 1'b1:1'b0;
 	assign v_sync = (v_count_value < 2) ? 1'b1:1'b0;
+
+	// Decrypted image dimensions (with rotation)
+	parameter D_WIDTH = 320;
+	parameter D_HEIGHT = 320;
+	parameter D_SIZE = D_WIDTH*D_HEIGHT;
+
+	// Encrypted image dimensions (with rotation)
+	parameter E_WIDTH = 640;
+	parameter E_HEIGHT = 320;
+	parameter E_SIZE = E_WIDTH*E_HEIGHT;
 	
 	// Decrypted image file
-	Sram #(20, 8, 310000, "D:/Drive de Eduardo/Dropbox/Documentos/TEC/SEMESTRE 11 - I 2020/Arquitectura de Computadores I (CE4301)/Proyectos/Proyectos grupales/Proyecto grupal 1/Git/ProyectoGrupalI/VGA/decrypted.mem")
+	Sram #(20, 8, D_SIZE, "D:/Drive de Eduardo/Dropbox/Documentos/TEC/SEMESTRE 11 - I 2020/Arquitectura de Computadores I (CE4301)/Proyectos/Proyectos grupales/Proyecto grupal 1/Git/ProyectoGrupalI/VGA/decrypted.mem")
 	decrypted(clk, address, 0, 16'b0, current_pixel_decrypted);
 	
 	// Encrypted image file
-	Sram #(20, 8, 310000, "D:/Drive de Eduardo/Dropbox/Documentos/TEC/SEMESTRE 11 - I 2020/Arquitectura de Computadores I (CE4301)/Proyectos/Proyectos grupales/Proyecto grupal 1/Git/ProyectoGrupalI/VGA/encrypted.mem")
+	Sram #(20, 8, E_SIZE, "D:/Drive de Eduardo/Dropbox/Documentos/TEC/SEMESTRE 11 - I 2020/Arquitectura de Computadores I (CE4301)/Proyectos/Proyectos grupales/Proyecto grupal 1/Git/ProyectoGrupalI/VGA/encrypted.mem")
 	encrypted(clk, address, 0, 16'b0, current_pixel_encrypted);
-	
-	// Black color
-	assign black = 8'h0;
 	
 	always @*
 	begin		
@@ -47,9 +54,10 @@ module VGA_Controller (
 		if(selected == 1'b0)
 		begin
 			// If the horizontal and vertical counters are in the display area and image area
-			if(h_count_value >= 144 && h_count_value < 464 && v_count_value >= 35 && v_count_value < 515)
+			if(h_count_value >= 144 && h_count_value < 144 + D_WIDTH && v_count_value >= 35 && v_count_value < 35 + D_HEIGHT)
 			begin
-				address = (h_count_value - 144)*480 + v_count_value - 35;
+				// Rotate and invert image
+				address = (h_count_value - 144)*D_HEIGHT + v_count_value - 35;
 				rgb = current_pixel_decrypted;
 			end
 			else
@@ -62,9 +70,10 @@ module VGA_Controller (
 		else if (selected == 1'b1)
 		begin
 			// If the horizontal and vertical counters are in the display area and image area
-			if(h_count_value >= 144 && h_count_value < 784 && v_count_value >= 35 && v_count_value < 515)
+			if(h_count_value >= 144 && h_count_value < 144 + E_WIDTH && v_count_value >= 35 && v_count_value < 35 + E_HEIGHT)
 			begin
-				address = (h_count_value - 144)*480 + v_count_value - 35;
+				// Rotate and invert image
+				address = (h_count_value - 144)*E_HEIGHT + v_count_value - 35;
 				rgb = current_pixel_encrypted;
 			end
 			else

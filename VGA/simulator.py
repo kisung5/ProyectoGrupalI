@@ -41,7 +41,8 @@ while (frame_counter < FRAMES):
         # Save frame to image file
         img = Image.new('L', (640, 480))
         img.putdata(current_image)
-        img.save("frame" + str(frame_counter + 1) + "." + IMAGE_EXTENSION)
+        img.save("Simulator outputs/frame" + str(frame_counter + 1) +
+                 "." + IMAGE_EXTENSION)
         # Update variables
         v_counter = 0
         h_counter = 0
