@@ -1,10 +1,10 @@
 operators = {
-    "mod": "00000",
     "add": "00001",
     "and": "00010",
     "sub": "00011",
     "mul": "00100",
     "cnb": "00101",
+    "mod": "00111",
     "beq": "01000",
     "bgt": "01001",
     "addi": "10000",
@@ -62,25 +62,25 @@ def compile(instruction):
 
 
 # Main
-file = open("rsa.asmrsa", "r")
+file = open("processor_tb.asmrsa", "r")
 fileArray = []
 pc = 0
 for line in file:
     line = line.lower()
     lineArray = line.split()
     if(len(lineArray) != 0):
-        pc += 4
         if(lineArray[0][-1] == ':'):
             newLabel = {lineArray[0][0:-1]: str(pc)}
             labels.update(newLabel)
         else:
+            pc += 4
             fileArray.append(lineArray)
 file.close()
 
 print(labels)
 print(fileArray)
 
-file = open("rsa.b", "w")
+file = open("processor_tb.b", "w")
 
 for instruction in fileArray:
     file.write(compile(instruction) + "\n")

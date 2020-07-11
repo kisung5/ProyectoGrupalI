@@ -7,7 +7,7 @@ logic [31:0] data;
 assign rd = data;
 
 initial
-	$readmemh("memfile.dat",RAM);
+	$readmemb("memfile.dat",RAM);
 
 always @(a)
 begin : MEM_READ

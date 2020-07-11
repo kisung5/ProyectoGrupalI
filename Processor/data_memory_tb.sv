@@ -6,7 +6,6 @@ logic [18:0] addr;
 logic [7:0] data, q;
 
 // address, clock, data, wren, q
-
 data_memory DUT (.address(addr), .clock(~clk), .wren(wren), .data(data), .q(q));
 
 always #10 clk <= ~clk;
