@@ -10,21 +10,17 @@ always #10 clk <= ~clk;
 initial begin
 	clk = 0;
 	rst = 0;
+	wen = 0;
 	in = 8'b00000000;
-	out = 8'b00000000;
-	#5 rst = 1;
-	#5 rst = 0;
-	#5 wen = 1;
-	#100;
-	#5 in = 8'b01011100;
-	#100;
-	#5 wen = 0;
-	#5 in = 8'b00001010;
-	#100;
-	#5 wen = 1;
-	#20;
-	#5 rst = 1;
-	#100;
+	#15 rst = 1;
+	#20 rst = 0;
+	#20 wen = 1;
+	in = 8'b01011100;
+	#20 wen = 0;
+	in = 8'b00001010;
+	#20 wen = 1;
+	in = 8'b00001010;
+	#20 rst = 1;
 end
 
 endmodule

@@ -6,7 +6,7 @@ logic [31:0] wd3, r15, rd1, rd2;
 
 Reg_bank DUT (.clk(clk), .rst(rst), .we3(we3), 
 .ra1(ra1), .ra2(ra2), .wa3(wa3),
-.wd3(wd3), .r15(r15),
+.wd3(wd3), .r_vga(r15),
 .rd1(rd1), .rd2(rd2));
 
 always #10 clk <= ~clk;
@@ -31,6 +31,14 @@ initial begin
 	wd3 = 32'hFF;
 	#20 we3 = 1'b0;
 	ra1 = 4'h0;
+	wd3 = 32'hFF;
+	#20 we3 = 1'b0;
+	wa3 = 4'hF;
+	wd3 = 32'hFF;
+	#20 we3 = 1'b1;
+	ra1 = 4'h0;
+	wa3 = 4'hF;
+	wd3 = 32'hFF;
 end
 
 endmodule 

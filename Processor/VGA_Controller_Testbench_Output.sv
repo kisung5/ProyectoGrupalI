@@ -43,4 +43,4 @@ module VGA_Controller_Testbench_Output;
 		$finish;
 	end
 	
-endmodule
+endmodule 

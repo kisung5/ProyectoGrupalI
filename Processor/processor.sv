@@ -7,7 +7,8 @@ input_data, // data input from data memory
 output logic memw_m, // memory write enable output control
 output [31:0] pcf, // pc address output to inst memory
 m_address, // memory address output to data memory
-m_data); // data output to data memory
+m_data, // data output to data memory
+reg_15);  // register from Register Bank that connects to DMA
 
 // %% List of connections/wires in the processor %%
 
@@ -17,9 +18,9 @@ register_src_m, // source register to Memory stage
 register_src_w, // source register to Writeback stage
 registerB_decode; // register B to decode in Register Bank
 
-logic [3:0] alu_control_o, // function code for ALU from the control unit
-alu_control_e, // function code for ALU to Execution stage
-register_A, register_B; // register bypass from Decode for the forward unit
+logic [2:0] alu_control_o, // function code for ALU from the control unit
+alu_control_e; // function code for ALU to Execution stage
+logic [3:0] register_A, register_B; // register bypass from Decode for the forward unit
 
 logic regw_o, alusrc_o, branche_o, memw_o, memtoreg_o, // control bits from the control unit
 regw_e, alusrc_e, memw_e, memtoreg_e, // control bits to Execution stage
@@ -45,7 +46,7 @@ regB; // single control for mux select for operand B
 
 logic [1:0] select_op_A, select_op_B;
 
-assign m_address = alu_result_m;
+assign m_address = (alu_result_m > 32'h4AFFF) ? 32'b0:alu_result_m;
 
 // %% List of modules per stage %%
 
@@ -82,7 +83,7 @@ multiplexer #(.N(4)) registerB_mux (.d1(inst_fetched[18:15]), .d2(inst_fetched[2
 Reg_bank register_bank(.clk(~clk), .rst(rst), .we3(regw_w), 
 .ra1(inst_fetched[22:19]), .ra2(registerB_decode), .wa3(register_src_w),
 .wd3(result_w),
-.rd1(opA_o), .rd2(opB_o));
+.rd1(opA_o), .rd2(opB_o), .r_vga(reg_15));
 
 // Control hazard unit for branches
 control_hazard_unit control_hazard
@@ -91,7 +92,7 @@ control_hazard_unit control_hazard
 .select_pc(select_pc), .flush(flush_decode), .stall(stall_fetch));
 
 // Decode/Execution instrucion pipelined register
-depipe decode_execution (.flush_E(rst || 1'b0), .clk(clk),
+depipe decode_execution (.flush_E(rst), .clk(clk),
 // input control
 .regw_D(regw_o), .memw_D(memw_o), .regmem_D(memtoreg_o),  
 .ALUope_D(alusrc_o), .ALUctrl_D(alu_control_o),

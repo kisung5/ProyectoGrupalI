@@ -1,5 +1,5 @@
 module alu #(parameter N = 32)
-(input logic [3:0] opcode,
+(input logic [2:0] opcode,
 input logic [N-1:0] operandA, operandB,
 output logic [N-1:0] result,
 output logic C_Flag, O_Flag, N_Flag, Z_Flag);
