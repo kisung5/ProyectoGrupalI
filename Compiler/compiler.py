@@ -62,7 +62,7 @@ def compile(instruction):
 
 
 # Main
-file = open("RSA_Decrypt.asmrsa", "r")
+file = open("rsa_decrypt_1.asmrsa", "r")
 fileArray = []
 pc = 0
 for line in file:

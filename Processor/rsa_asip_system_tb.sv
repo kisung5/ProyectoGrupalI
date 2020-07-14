@@ -13,13 +13,13 @@ rsa_asip_system DUT
 .rgb(rgb));
 
 
-always #10 clk <= ~clk;
+always #1 clk <= ~clk;
 
 initial begin
 	clk = 0;
 	rst = 1;
 	selected = 0;
-	#25 rst = 0;
+	#3 rst = 0;
 	selected = 1;
 	@(posedge reg15);
 	$finish;

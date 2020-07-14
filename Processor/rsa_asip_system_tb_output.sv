@@ -15,7 +15,7 @@ rsa_asip_system DUT
 .rgb(rgb));
 
 
-always #5 clk = ~clk;
+always #1 clk = ~clk;
 //always #8400000 selected = ~selected;
 
 //Clock and reset release
@@ -46,7 +46,7 @@ initial begin
 	@(posedge reg15);
 	@(posedge clk);
 	
-	for (i = 0; i<1260150; i=i+1)
+	for (i = 0; i<840100; i=i+1)
 	begin
 		@(posedge clk_25mhz);
 		$fwrite(file2, "%b %b %b\n", h_sync, v_sync, rgb);
