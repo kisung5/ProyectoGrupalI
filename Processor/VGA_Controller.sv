@@ -56,8 +56,7 @@ module VGA_Controller (
 			// If the horizontal and vertical counters are in the display area and image area
 			if(h_count_value >= 144 && h_count_value < 144 + D_WIDTH && v_count_value >= 35 && v_count_value < 35 + D_HEIGHT)
 			begin
-				// Rotate and invert image
-				address = (h_count_value - 16'd144)*D_HEIGHT + (v_count_value - 16'd35) + 19'd204800;
+				address = h_count_value - 144 + (v_count_value - 35)*D_HEIGHT + 19'd204800;
 //				rgb = current_pixel_decrypted;
 				rgb = current_pixel;
 			end
