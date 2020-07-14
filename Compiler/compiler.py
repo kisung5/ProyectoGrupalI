@@ -62,7 +62,7 @@ def compile(instruction):
 
 
 # Main
-file = open("processor_tb.asmrsa", "r")
+file = open("RSA_Decrypt.asmrsa", "r")
 fileArray = []
 pc = 0
 for line in file:
@@ -80,7 +80,7 @@ file.close()
 print(labels)
 print(fileArray)
 
-file = open("processor_tb.b", "w")
+file = open("RSA_Decrypt.b", "w")
 
 for instruction in fileArray:
     file.write(compile(instruction) + "\n")

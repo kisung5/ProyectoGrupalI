@@ -10,6 +10,7 @@ always_ff @(posedge clk)
 			out = 0; 
 		else if (wen)
 			out = in;
+		else
+			out = out;
 	end
- 
 endmodule 

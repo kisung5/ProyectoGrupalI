@@ -7,7 +7,7 @@ logic [31:0] data;
 assign rd = data;
 
 initial
-	$readmemb("memfile.dat",RAM);
+	$readmemb("RSA_Decrypt.b",RAM);
 
 always @(a)
 begin : MEM_READ
