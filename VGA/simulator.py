@@ -21,7 +21,6 @@ PIXEL_INFO = FILE.read().split('\n')
 
 # ARRAYS
 current_image = []
-current_row = []
 
 # PROCESS EVERY FRAME
 h_counter = 0
