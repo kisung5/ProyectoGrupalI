@@ -1,4 +1,5 @@
 from PIL import Image
+import os
 
 # IMAGE DATA
 IMAGE_EXTENSION = "png"
@@ -15,7 +16,9 @@ SIZE = WIDTH * HEIGHT
 # NOTE: This simulator assumes a 1 pixel by sample ratio and a 640x480 display
 
 # OPEN TESTBENCH FILE
-FILE = open('vga_decrypted.txt', "r")
+DIRECTORY = open(os.path.dirname(os.getcwd()) +
+                 '\\quartus_directory.txt', 'r').read()
+FILE = open(DIRECTORY + '\\vga_decrypted.txt', "r")
 PIXEL_INFO = FILE.read().split('\n')
 # NOTE: Testbench pixel info format = h_sync (1b) v_sync (1b) red (3b) green (3b) blue (2b)
 
