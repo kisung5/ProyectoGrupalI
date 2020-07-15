@@ -43,7 +43,7 @@ begin
 		3'b100 : 
 			begin // Operation and
 //				result <= and_result;
-				result <= operandA & operandB;
+				result <= operandA && operandB;
 				carryout <= 1'b0;
 			end
 		3'b101 : 

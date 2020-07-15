@@ -6,8 +6,7 @@ Addi R5 Zero 0
 
 Main:
     Lb V1 R5 0
-    Addi R5 R5 1
-    Lb V2 R5 0
+    Lb V2 R5 1
     Cnb R8 V1 V2
     Mod T1 R8 R2
     Addi R7 Zero 0
@@ -21,6 +20,6 @@ Loop_Exponenciation:
 Post_Result:
     Sb T1 R3 0
     Addi R3 R3 1
-    Addi R5 R5 1
+    Addi R5 R5 2
     Bgt R4 R3 Main
     Addi S1 Zero 1
