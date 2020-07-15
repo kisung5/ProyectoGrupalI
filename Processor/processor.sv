@@ -22,7 +22,8 @@ logic [2:0] alu_control_o, // function code for ALU from the control unit
 alu_control_e; // function code for ALU to Execution stage
 logic [3:0] register_A, register_B; // register bypass from Decode for the forward unit
 
-logic regw_o, alusrc_o, branche_o, memw_o, memtoreg_o, // control bits from the control unit
+logic regw_o, alusrc_o, branche_o, memw_o, memtoreg_o,
+branch_e, // control bits from the control unit
 regw_e, alusrc_e, memw_e, memtoreg_e, // control bits to Execution stage
 regw_m, memtoreg_m, // control bits to Memory stage
 regw_w, memtoreg_w; // control bits to Writeback stage
@@ -46,6 +47,8 @@ regB; // single control for mux select for operand B
 
 logic [1:0] select_op_A, select_op_B;
 
+logic [4:0] opCodeB;
+
 assign m_address = (alu_result_m > 32'h4AFFF) ? 32'b0:alu_result_m;
 
 // %% List of modules per stage %%
@@ -59,7 +62,7 @@ register #(.N(32)) PC (.wen(1'b1), .rst(rst), .clk(clk), .in(pc_mux_reg), .out(p
 adder pc_adder (.operandA(pcf), .operandB(32'b100), .result(pc_adder_mux), .cout());
 
 // Mux selector for PC load data
-multiplexer pc_load_select (.d1(pc_adder_mux), .d2(imm_ext_o), .d3(32'b0), 
+multiplexer pc_load_select (.d1(pc_adder_mux), .d2(imm_ext_e), .d3(32'b0), 
 .selector({1'b0,select_pc}), .out(pc_mux_reg));
 
 // Fetch/Decode instruction pipelined register
@@ -85,23 +88,18 @@ Reg_bank register_bank(.clk(~clk), .rst(rst), .we3(regw_w),
 .wd3(result_w),
 .rd1(opA_o), .rd2(opB_o), .r_vga(reg_15));
 
-// Control hazard unit for branches
-control_hazard_unit control_hazard
-(.branchE(branche_o), .opCode(inst_fetched[31:27]),
-.opeA(opA_o), .opeB(opB_o),
-.select_pc(select_pc), .flush(flush_decode), .stall(stall_fetch));
-
 // Decode/Execution instrucion pipelined register
-depipe decode_execution (.flush_E(rst), .clk(clk),
+depipe decode_execution (.flush_E(rst || flush_decode), .clk(clk), 
+.branch_D(branche_o), .branch_E(branch_e),
 // input control
 .regw_D(regw_o), .memw_D(memw_o), .regmem_D(memtoreg_o),  
-.ALUope_D(alusrc_o), .ALUctrl_D(alu_control_o),
+.ALUope_D(alusrc_o), .ALUctrl_D(alu_control_o), .op_code_D(inst_fetched[31:27]),
 // input data
 .regScr_D(inst_fetched[26:23]), .regA_D(opA_o), .regB_D(opB_o), .inm_D(imm_ext_o),
 .regAD(inst_fetched[22:19]), .regBD(registerB_decode),
 // output control
-.regw_E(regw_e), .memw_E(memw_e), .regmem_E(memtoreg_e),
-.ALUope_E(alusrc_e), .ALUctrl_E(alu_control_e),
+.regw_E(regw_e), .memw_E(memw_e), .regmem_E(memtoreg_e), 
+.ALUope_E(alusrc_e), .ALUctrl_E(alu_control_e), .op_code_E(opCodeB),
 // output data 
 .regScr_E(register_src_e), .regA_E(opA_e), .regB_E(opB_e), .inm_E(imm_ext_e),
 .regAE(register_A), .regBE(register_B));
@@ -119,6 +117,12 @@ multiplexer_4 opB_select (.d1(opB_e), .d2(alu_result_m), .d3(input_data), .d4(re
 // Operand B selector MUX register or imm
 multiplexer opB_select1 (.d1(opB_hazard_imm), .d2(imm_ext_e), .d3(32'b0), 
 .selector({1'b0,alusrc_e}), .out(opB_hazard));
+
+// Control hazard unit for branches
+control_hazard_unit control_hazard
+(.branchE(branch_e), .opCode(opCodeB),
+.opeA(opA_hazard), .opeB(opB_hazard),
+.select_pc(select_pc), .flush(flush_decode), .stall(stall_fetch));
 
 // ALU
 alu alu_unit (.opcode(alu_control_e), // control
