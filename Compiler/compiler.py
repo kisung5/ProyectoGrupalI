@@ -1,3 +1,5 @@
+import os
+
 operators = {
     "add": "00001",
     "and": "00010",
@@ -62,7 +64,9 @@ def compile(instruction):
 
 
 # Main
-file = open("rsa_decrypt_1.asmrsa", "r")
+QUARTUS_DIRECTORY = open(os.path.dirname(os.getcwd()) +
+                         '\\quartus_directory.txt', 'r').read()
+file = open("RSA_Decrypt.asmrsa", "r")
 fileArray = []
 pc = 0
 for line in file:
@@ -80,7 +84,8 @@ file.close()
 print(labels)
 print(fileArray)
 
-file = open("RSA_Decrypt.b", "w")
+
+file = open(QUARTUS_DIRECTORY + '\\RSA_Decrypt.b', "w")
 
 for instruction in fileArray:
     file.write(compile(instruction) + "\n")
