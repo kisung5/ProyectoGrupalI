@@ -5,7 +5,7 @@ import os
 IMAGE_EXTENSION = "png"
 
 # VGA DATA
-FRAMES = 2
+FRAMES = 4
 H_BACK_PORCH = 143
 H_FRONT_PORCH = 784
 V_BACK_PORCH = 34
@@ -18,7 +18,7 @@ SIZE = WIDTH * HEIGHT
 # OPEN TESTBENCH FILE
 DIRECTORY = open(os.path.dirname(os.getcwd()) +
                  '\\quartus_directory.txt', 'r').read()
-FILE = open(DIRECTORY + '\\vga_decrypted.txt', "r")
+FILE = open(DIRECTORY + '\\monitor_inputs.txt', "r")
 PIXEL_INFO = FILE.read().split('\n')
 # NOTE: Testbench pixel info format = h_sync (1b) v_sync (1b) red (3b) green (3b) blue (2b)
 

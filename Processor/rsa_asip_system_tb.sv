@@ -10,7 +10,7 @@ rsa_asip_system DUT
 (.clk(clk), .rst(rst), .selected(selected), .reg15(reg15),
 //);
 .h_sync(h_sync), .v_sync(v_sync), .clk_25mhz(clk_25mhz), .sync_n(sync_n), .blank_n(blank_n),
-.rgb(rgb));
+.R(rgb), .G(), .B());
 
 
 always #1 clk <= ~clk;

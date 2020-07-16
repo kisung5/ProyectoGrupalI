@@ -6,16 +6,15 @@ module rsa_asip_system
 selected,
 output logic h_sync, v_sync, clk_25mhz, sync_n, blank_n, 
 output logic reg15,
-output logic [7:0] rgb
+output logic [7:0] R, G, B
 );
 
 logic m_write_e, m_wren_cpu,
 rst_sys, vga_select, mux_select;
-logic [7:0] m_rdata, m_rdata_cpu, m_rdata_vga;
+logic [7:0] m_rdata, m_rdata_cpu, m_rdata_vga, rgb;
 logic [31:0] inst, pc_f, reg_15,
 m_write_data, m_address_cpu; 
 logic [18:0] m_address_vga, m_address;
-
 logic [1:0] state, next;	
 
 // I/O unit as a DMA in system using a FSM
@@ -61,18 +60,19 @@ always_comb
 			rst_sys <= 1'b1;
 		end
 	2'b10: 
-		if (selected) begin
+//		if (selected) 
+		begin
 			next <= 2'b10;
 			mux_select <= 1'b1;
 			vga_select <= 1'b1;
 			rst_sys <= 1'b1;
 		end 
-		else begin
-			next <= 2'b00;
-			mux_select <= 1'b1;
-			vga_select <= 1'b0;
-			rst_sys <= 1'b1;
-		end
+//		else begin
+//			next <= 2'b00;
+//			mux_select <= 1'b1;
+//			vga_select <= 1'b0;
+//			rst_sys <= 1'b1;
+//		end
 	default: next <= 2'b00;
 	endcase
 
@@ -122,5 +122,8 @@ VGA_Controller Vga_controller
 .clk_25mhz(clk_25mhz), .sync_n(sync_n), .blank_n(blank_n), .address(m_address_vga));
 
 assign reg15 = reg_15[0];
+assign R = rgb;
+assign G = rgb;
+assign B = rgb;
 
 endmodule 

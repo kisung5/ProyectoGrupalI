@@ -5,14 +5,14 @@ logic clk, rst, selected, reg15,
 h_sync, v_sync, clk_25mhz, sync_n, blank_n;
 //logic [31:0] pc;
 logic [7:0] rgb;
-integer file1, file2;
+integer file;
 integer i;
 
 rsa_asip_system DUT
 (.clk(clk), .rst(rst), .selected(selected), .reg15(reg15),
 //);
 .h_sync(h_sync), .v_sync(v_sync), .clk_25mhz(clk_25mhz), .sync_n(sync_n), .blank_n(blank_n),
-.rgb(rgb));
+.R(rgb), .G(), .B());
 
 
 always #1 clk = ~clk;
@@ -28,8 +28,7 @@ initial begin
 end
 
 initial begin
-	file1 = $fopen("vga_encrypted.txt","w");
-	file2 = $fopen("vga_decrypted.txt","w");
+	file = $fopen("monitor_inputs.txt","w");
 
 	@(negedge rst); //Wait for reset to be released
 	@(posedge clk);   //Wait for fisrt clock out of reset
@@ -37,7 +36,7 @@ initial begin
 	for (i = 0; i<840100; i=i+1)
 	begin
 		@(posedge clk_25mhz);
-		$fwrite(file1, "%b %b %b\n", h_sync, v_sync, rgb);
+		$fwrite(file, "%b %b %b\n", h_sync, v_sync, rgb);
 	end
 	
 	@(posedge clk);
@@ -49,11 +48,10 @@ initial begin
 	for (i = 0; i<840100; i=i+1)
 	begin
 		@(posedge clk_25mhz);
-		$fwrite(file2, "%b %b %b\n", h_sync, v_sync, rgb);
+		$fwrite(file, "%b %b %b\n", h_sync, v_sync, rgb);
 	end
 	
-	$fclose(file1);  
-	$fclose(file2);
+	$fclose(file);  
 
 	$finish;
 end
