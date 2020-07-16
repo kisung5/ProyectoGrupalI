@@ -33,7 +33,7 @@ initial begin
 	@(negedge rst); //Wait for reset to be released
 	@(posedge clk);   //Wait for fisrt clock out of reset
 
-	for (i = 0; i<840100; i=i+1)
+	for (i = 0; i<420050; i=i+1)
 	begin
 		@(posedge clk_25mhz);
 		$fwrite(file, "%b %b %b\n", h_sync, v_sync, rgb);
@@ -47,8 +47,10 @@ initial begin
 	
 	for (i = 0; i<840100; i=i+1)
 	begin
+	if(i>420050) begin
 		@(posedge clk_25mhz);
 		$fwrite(file, "%b %b %b\n", h_sync, v_sync, rgb);
+	end
 	end
 	
 	$fclose(file);  
