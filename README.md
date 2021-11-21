@@ -1,6 +1,9 @@
-# README
+# RSA ASIP Decrypter
+This project is an implementation of an image decrypter using the RSA algorithm in an FPGA. The ASIP is completely designed in SystemVerilog. Furthermore, the decrypted image is visible using a VGA Controller.
 
-# Herramientas requeridas
+## Usage (in Spanish)
+
+### Herramientas requeridas
 
 Para poder ejecutar este proyecto se requiere que previamente disponga de las siguientes herramientas:
 
@@ -8,7 +11,7 @@ Para poder ejecutar este proyecto se requiere que previamente disponga de las si
 2. Para realizar la ejecución del código se requiere ModelSim 10.5b (Quartus Prime 18.1).
 3. Además debe descargar el actual repositorio.
 
-# Pasos para ejecutarlo
+### Pasos para ejecutarlo
 
 1. Colocar en la raíz del repositorio un archivo de texto(`.txt`) con el siguiente nombre `quartus_directory.txt`  y colocar el directorio que contiene todos los archivos de Quartus Prime. Por ejemplo:  `C:\intelFPGA_lite\18.1`.
 2. Para poder compilar un código ensamblador `.asmrsa` debe ejecutar el script de Python del presente repositorio que se encuentra en `Compiler\compiler.py`. Asegúrese de que el código fuente tenga el siguiente nombre: `RSA_Decrypt.asmrsa`.
